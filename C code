@@ -1,0 +1,24 @@
+// بسم الله الرحمن الرحيم
+int irPin = 2;
+int doorStatus = 0;
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(irPin, INPUT);
+  Serial.println("IR Sensor Initialized");
+}
+
+void loop() {
+  int val = digitalRead(irPin);
+
+  if (val == HIGH && doorStatus == 0) {
+    Serial.println("Door Opened!");
+    doorStatus = 1;
+  }
+
+  if (val == LOW && doorStatus == 1) {
+    doorStatus = 0;
+  }
+
+  delay(100);
+}
