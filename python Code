@@ -1,0 +1,35 @@
+# استيراد المكتبات المطلوبة
+import serial
+import webbrowser
+import time
+import pyautogui
+
+# إعدادات الاتصال بالأردوينو
+منفذ_الأردوينو = 'COM3'  # تأكد من تغيير هذا للمنفذ الصحيح
+سرعة_الاتصال = 9600
+رابط_المذاكرة = "https://www.youtube.com/watch?v=XbPOxzPkzJg"
+
+try:
+    # بدء الاتصال بالأردوينو
+    اردوينو = serial.Serial(منفذ_الأردوينو, سرعة_الاتصال)
+    time.sleep(2)  # انتظار إتمام الاتصال
+    
+    while True:
+        if اردوينو.in_waiting > 0:
+            # قراءة البيانات من الأردوينو
+            بيانات = اردوينو.readline().decode().strip()
+            
+            if بيانات == "DOOR OPENED!":
+                # فتح رابط المذاكرة
+                webbrowser.open(رابط_المذاكرة)
+                time.sleep(1)
+                # الانتقال لنافذة المتصفح
+                pyautogui.hotkey('alt', 'tab')
+                
+except KeyboardInterrupt:
+    print("إغلاق البرنامج")
+    اردوينو.close()
+except Exception as e:
+    print(f"حدث خطأ: {e}")
+    if 'اردوينو' in locals():
+        اردوينو.close()
